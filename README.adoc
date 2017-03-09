@@ -1,0 +1,4 @@
+= yermilov-lazybones
+:linkattrs:
+
+Collection of custom link:https://github.com/pledbrook/lazybones[lazybones, window="_blank"] templates.
