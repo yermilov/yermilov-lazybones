@@ -1,12 +1,10 @@
 FROM openjdk:8
 
-RUN mkdir -p /usr/src/${serviceName} \
-  && mkdir -p /usr/app
+RUN mkdir -p /usr/src/${serviceName} && mkdir -p /usr/app
 
 COPY build/distributions/* /usr/src/${serviceName}/
 
-RUN unzip /usr/src/${serviceName}/${serviceName}-*.zip -d /usr/app/ \
-  && ln -s /usr/app/${serviceName}-* /usr/app/${serviceName}
+RUN unzip /usr/src/${serviceName}/${serviceName}-*.zip -d /usr/app/ && ln -s /usr/app/${serviceName}-* /usr/app/${serviceName}
 
 WORKDIR /usr/app/${serviceName}
 

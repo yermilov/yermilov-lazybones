@@ -1,7 +1,5 @@
 = ${serviceName}
-
-${serviceDescription}
-
+${serviceDescription != null ? '\n' + serviceDescription + '\n': ''}
 == Travis job
 
 image:https://travis-ci.org/${githubOrganization}/${githubRepository}.svg?branch=develop["Travis job", link="https://travis-ci.org/${githubOrganization}/${githubRepository}"]
