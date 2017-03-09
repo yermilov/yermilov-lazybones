@@ -1,0 +1,27 @@
+sudo: required
+
+language: java
+
+branches:
+  only:
+  - master
+
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+
+before_install:
+- chmod +x gradlew
+
+install:
+- "./gradlew publishAllTemplates -Dscan"
+
+env:
+  global:
+  - secure: EKJ5C7kmAA1cZIhnQyC/HXyBh4rPkaDETh8FYR4irmhvNIyfgiKWmLChlgY3qz3ahk0ofEyUyU/rQMxNn4al1B0ljF07fZt1i9W7drzRFUPmJS9Tyqh5bDKalkRQrOJnSt1vz/ZvKITSYofiMkCwW64aM1hmsxJCx2lqfxhC6Zf2T2G6b31KvAhq76dIuHI1EVVNbq1Iqv3fzKCft/Xsho97hOcsMz62TLuCSTVl7M8R+AdeXi7GSkTN6M7/BJdEQOzVjrL8ByCIrIWlXBtkx0QXCQYvgvSET3UMyHBD3VYZir4oUHNfstTHoIN1XYGZ/up8Qm6btwU/iDL4EM8dztK13iW2GssNkSdlAEzoFRfbD8Thb11t+rXaVJ4sH4HnTAdl506RiwKvhFhEtXjF8oGe7E92ninYmAGNtez9VOIeJ1KoX/UwRxKgJv4ZY+bK28ytRSrZt/Mg6juN7vt6XVUyf+Vc6S0xKN5Wuz1jS8zg/uU1p7L8dprh6VhsoZ22AGM8hFXz0uV2mhGZoXG6HCRR2T/EfaQTTtvTlQ+8hwfmM3awm2DuLKzOn07x42uffp6x+oFJWpRVOjvsE3P5Yb5SxZFS/3ZxQEVGEQn1LPDkcF8yZyJAGpsgubcbfe45aDUakg13/+4vA80ohjPFc3fyYmv7vNRZuaESqS3G4BM=
+  - secure: c77UUcufLuRsYF+3GaukN2/qIWsBhrBcRHtuEmcgQRA9Zk2CU91Jp+2GY2aYMw19V1Wcg5tStgCs9AtgogIQt5BpbPgximoXNAUds9Ex/9TXm2sfPwulzT5wKPLqw6kZYY8cL2c+9o3qmDDK/4sZzNefI9WfHJQ71k5Yr2O9G4TeBJNpYvdmUTAGk/LO+y/7xw/cEGkS7SEt8DanpPO4ig64BOgtlmwMlFoCjyVnvKi7jEKwaIezobimY3R/WqzQOeHOJBn3Md9c82QsBAiuDxCLXGWCg8GS/PDTeigqClUlrjGk5P+F/AGWKHsdUu4bm4tz/dKUJentm2fsXEyQzOsmkGYZlypa2ikXVAn/wcJR8nNcXgzxf0PGqWGD/RWCZC+9tMzI9hAGT4KxOHUcgQjBSXaS9Ri2jMkWoKINdkjT19ga02pTL9iy/Y4td8Buqes0km7noVRbDvm1mzmUeeHWASnvx9CufJdgrMtIKkNCRIyh1mBhdyaG3AP8hgff94c9SDL9zfQGZSKb1/jRoDf5cXzNmP96wltUmIqGJwJ4upNxiP+E/It8A512DRx5kRLI1GESsk9P7G+IXuh+kW5QpxlgxAExYJATkSRhIPeR3evi5KB9MZWTW7eCfFuLwzb6DW5wQlALoN5rx6xDvSddIrLD5i+jXdls+KX4ado=

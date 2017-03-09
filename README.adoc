@@ -2,3 +2,22 @@
 :linkattrs:
 
 Collection of custom link:https://github.com/pledbrook/lazybones[lazybones, window="_blank"] templates.
+
+== Bintray repository
+
+https://bintray.com/yermilov/yermilov-lazybones
+
+== Travis job
+
+image:https://travis-ci.org/yermilov/yermilov-lazybones.svg?branch=master["Travis job", link="https://travis-ci.org/yermilov/yermilov-lazybones"]
+
+== HOWTO: enable
+
+[source,shell]
+----
+lazybones config add bintrayRepositories yermilov/yermilov-lazybones
+----
+
+== List of templates
+
+link:templates/groovy-service[groovy-service]
