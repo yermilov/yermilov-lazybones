@@ -20,6 +20,6 @@ SERVICE_LOG_LEVEL - logging level for service code (default is INFO)
 
 [source,shell]
 ----
-docker pull ${dockerhubOrganization}/${dockerhubRepository}:?TAG?
-docker run -dit --name ${dockerContainerName} -v /logs:/logs${externalPort != 'no' ? ' -p' + externalPort + ':8080' : ''} ${dockerhubOrganization}/${dockerhubRepository}:?TAG?
+docker pull ${dockerhubOrganization}/${dockerhubRepository}:?TAG
+docker run -dit --name ${dockerContainerName} -v /logs:/logs${externalPort != 'no' ? ' -p ' + externalPort + ':8080' : ''} ${dockerhubOrganization}/${dockerhubRepository}:?TAG
 ----
