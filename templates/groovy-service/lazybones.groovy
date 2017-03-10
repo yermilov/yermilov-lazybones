@@ -1,4 +1,5 @@
 import uk.co.cacoethes.util.NameType
+import org.ini4j.Wini
 
 
 def error = { String message -> throw new IllegalArgumentException(message) }
@@ -35,6 +36,15 @@ def environment = [
 ]
 environment.each { props."$it" = '$' + it }
 
+def gitUsername
+def gitEmail
+def gitConfigFile = new File(System.getProperty("user.home"), ".gitconfig")
+if (gitConfigFile.exists()) {
+    def gitConfig = new Wini(gitConfigFile)
+    gitUsername = gitConfig.get("user", "name")
+    gitEmail = gitConfig.get("user", "email")
+}
+
 props.serviceName = askMandatory 'serviceName', projectDir.name
 props.serviceDescription = askOptional 'serviceDescription'
 if (props.serviceDescription != null && !props.serviceDescription.endsWith('.')) props.serviceDescription += '.'
@@ -44,6 +54,9 @@ props.githubRepository = askMandatory 'githubRepository', props.serviceName
 
 props.dockerhubOrganization = askMandatory 'dockerhubOrganization', props.githubOrganization
 props.dockerhubRepository = askMandatory 'dockerhubRepository', props.githubRepository
+
+props.rubyHome = askMandatory 'rubyHome', System.getenv('PATH').split(';').find({ it.toLowerCase().contains('ruby') })
+props.dockerEmail = askMandatory 'dockerEmail', gitEmail
 
 props.rootPackage = askMandatory 'rootPackage', "com.github.${transformText(props.githubOrganization, from: NameType.HYPHENATED, to: NameType.PROPERTY)}.${transformText(props.githubRepository, from: NameType.HYPHENATED, to: NameType.PROPERTY)}"
 
@@ -89,3 +102,9 @@ class Application {
 
 
 [ 'controller', 'service' ].each { new File(rootPackageDir, it).mkdirs() }
+
+def encryptDockerEmailProcess = ([ "ruby", "${props.rubyHome}/travis", "encrypt", "DOCKER_EMAIL=${props.dockerEmail}" ]).execute([], projectDir)
+def out = new StringWriter()
+encryptDockerEmailProcess.consumeProcessOutput out, out
+encryptDockerEmailProcess.waitFor()
+new File(projectDir, 'travis.txt').text = out.toString()
