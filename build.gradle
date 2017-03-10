@@ -19,8 +19,8 @@ apply plugin: "uk.co.cacoethes.lazybones-templates"
 lazybones {
     repositoryName = 'yermilov/yermilov-lazybones'
 
-    repositoryUsername = project.bintrayUsername ?: System.getenv('BINTRAY_USERNAME')
-    repositoryApiKey = project.bintrayApiKey ?: System.getenv('BINTRAY_API_KEY')
+    repositoryUsername = project.hasProperty('bintrayUsername') ? project.bintrayUsername : System.getenv('BINTRAY_USERNAME')
+    repositoryApiKey = project.hasProperty('bintrayApiKey') ? project.bintrayApiKey : System.getenv('BINTRAY_API_KEY')
 
     licenses = [ 'Apache-2.0' ]
     vcsUrl = 'https://github.com/yermilov/yermilov-lazybones'
