@@ -1,4 +1,5 @@
 = groovy-service
+:linkattrs:
 
 Template for web service based on Groovy and Spring Boot.
 
