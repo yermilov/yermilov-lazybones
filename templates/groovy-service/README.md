@@ -1,11 +1,19 @@
 groovy-service
 --------------
 
-Template for web service based on Groovy and Spring Boot:
+Template for web service based on Groovy and Spring Boot.
 
-After you've just run following command:
+First, do the following:
 
-    lazybones create groovy-service my-new-groovy-service --with-git
+Create new GitHub repository for your service at https://github.com/new
+
+Enable Travis-CI job for it at https://travis-ci.org/profile
+
+Create DockerHub repository for it at https://hub.docker.com/add/repository
+
+Then you can run following command:
+
+    lazybones create groovy-service my-new-groovy-service
 
 You got following project structure:
 
@@ -40,22 +48,10 @@ You got following project structure:
       +- Dockerfile
       +- README.adoc
 
-Now you should do the following:
-
-Create new GitHub repository that match the one you already provided to lazybones configuration at  https://github.com/new
-
-Enable Travis-CI job at https://travis-ci.org/profile
-
-Create DockerHub repository that match the one you already provided to lazybones configuration at https://hub.docker.com/add/repository
+At the end, finalize project creation with following:
 
 Set up git-flow for your repository.
 
-Add GitHub repository as origin remote to your local one.
-
-Encode your DockerHub credentials for Travis-CI:
-
-    travis encrypt DOCKER_EMAIL=? --add
-    travis encrypt DOCKER_USERNAME=? --add
-    travis encrypt $DOCKER_PASSWORD=? --add
+Commit .lazybones/ directory to store create configuration.
 
 Push code to GitHub.
