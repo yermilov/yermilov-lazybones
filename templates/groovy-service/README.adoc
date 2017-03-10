@@ -1,0 +1,64 @@
+= groovy-service
+:linkattrs:
+
+Template for web service based on Groovy and Spring Boot.
+
+== HOWTO: create new project from template
+
+First, do the following:
+
+. Create new link:https://github.com/new[GitHub repository, window="_blank"] for your service.
+
+. Enable link:https://travis-ci.org/profile[Travis-CI job, window="_blank"] for it.
+
+. Create link:https://hub.docker.com/add/repository[DockerHub repository, window="_blank"] for it.
+
+Then you can run following command:
+
+[source,shell]
+----
+lazybones create groovy-service my-new-groovy-service
+----
+
+You will get following project structure:
+
+----
+<project>
+  |
+  +- src
+  |   |
+  |   +- docs
+  |   |   |
+  |   |   +- howto-run-service.adoc
+  |   |   +- howto-start-docker.adoc
+  |   |
+  |   +- main
+  |       |
+  |       +- groovy
+  |       |    |
+  |       |    +- $rootPackage
+  |       |         |
+  |       |         +- controller
+  |       |         |     |
+  |       |         |     ...
+  |       |         +- service
+  |       |         |     |
+  |       |         |     ...
+  |       |         +- Application.groovy
+  |       +- resources
+  |            |
+  |            +- logback.groovy
+  +- .gitignore
+  +- .travis.yml
+  +- build.gradle
+  +- Dockerfile
+  +- README.adoc
+----
+
+At the end, finalize project creation with following:
+
+. Set up git-flow for your repository.
+
+. Commit ___.lazybones/___ directory to store create configuration.
+
+. Push code to GitHub.
