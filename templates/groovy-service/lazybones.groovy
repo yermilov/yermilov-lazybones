@@ -1,5 +1,4 @@
 import uk.co.cacoethes.util.NameType
-import org.ini4j.Wini
 
 
 def error = { String message -> throw new IllegalArgumentException(message) }
@@ -36,13 +35,6 @@ def environment = [
 ]
 environment.each { props."$it" = '$' + it }
 
-def gitUsername
-def gitEmail
-def gitConfigFile = new File(System.getProperty("user.home"), ".gitconfig")
-if (gitConfigFile.exists()) {
-    gitEmail = new Wini(gitConfigFile).get("user", "email")
-}
-
 props.serviceName = askMandatory 'serviceName', projectDir.name
 props.serviceDescription = askOptional 'serviceDescription'
 if (props.serviceDescription != null && !props.serviceDescription.endsWith('.')) props.serviceDescription += '.'
@@ -53,8 +45,6 @@ props.githubRepository = askMandatory 'githubRepository', props.serviceName
 props.dockerhubOrganization = askMandatory 'dockerhubOrganization', props.githubOrganization
 props.dockerhubRepository = askMandatory 'dockerhubRepository', props.githubRepository
 
-props.dockerEmail = askMandatory 'dockerEmail', gitEmail
-
 props.rootPackage = askMandatory 'rootPackage', "com.github.${transformText(props.githubOrganization, from: NameType.HYPHENATED, to: NameType.PROPERTY)}.${transformText(props.githubRepository, from: NameType.HYPHENATED, to: NameType.PROPERTY)}"
 
 props.dockerContainerName = askMandatory 'dockerContainerName', props.serviceName.replace('-', '_')
@@ -63,7 +53,7 @@ props.externalPort = askMandatory 'externalPort', 'no'
 
 
 def templates = [
-  'README.adoc',
+  'README.tmpl',
   '.travis.yml',
   'build.gradle',
   'Dockerfile',
@@ -71,6 +61,8 @@ def templates = [
   'src/docs/howto-start-docker.adoc'
 ]
 templates.each { processTemplates it, props }
+new File(projectDir, 'README.tmpl').renameTo(new File(projectDir, 'README.adoc'))
+new File(projectDir, 'README.md').delete()
 
 
 def rootPackageDir = new File(projectDir, "src/main/groovy/${props.rootPackage.replace('.', '/')}")
@@ -97,8 +89,3 @@ class Application {
 
 
 [ 'controller', 'service' ].each { new File(rootPackageDir, it).mkdirs() }
-
-
-// def encryptDockerEmailProcess = (["cmd.exe", "/c", "travis encrypt DOCKER_EMAIL=${props.dockerEmail}"]).execute([], projectDir)
-// encryptDockerEmailProcess.waitFor()
-// new File(projectDir, 'travis.txt').text = encryptDockerEmailProcess.text
