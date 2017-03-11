@@ -26,6 +26,8 @@ lazybones {
 
     licenses = [ 'Apache-2.0' ]
     vcsUrl = 'https://github.com/yermilov/yermilov-lazybones'
+
+    template 'groovy-service' includes 'mongodb'
 }
 
 buildScan {
