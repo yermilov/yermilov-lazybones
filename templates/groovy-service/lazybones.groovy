@@ -87,16 +87,15 @@ props.externalPort = askMandatory 'externalPort', 'no'
 
 
 def templates = [
-  'README.tmpl',
-  '.travis.yml',
-  'build.gradle',
-  'Dockerfile',
-  'src/main/resources/logback.groovy',
-  'src/docs/howto-start-docker.adoc'
+        '.gitignore.gtpl',
+        'README.adoc.gtpl',
+        '.travis.yml',
+        'build.gradle',
+        'Dockerfile',
+        'src/main/resources/logback.groovy',
+        'src/docs/howto-start-docker.adoc'
 ]
 templates.each { processTemplates it, props }
-new File(projectDir, 'README.tmpl').renameTo(new File(projectDir, 'README.adoc'))
-new File(projectDir, 'README.md').delete()
 
 
 def rootPackageDir = new File(projectDir, "src/main/groovy/${props.rootPackage.replace('.', '/')}")
