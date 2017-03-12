@@ -1,12 +1,12 @@
 buildscript {
     repositories {
         maven {
-            url "http://dl.bintray.com/pledbrook/plugins"
+            url 'http://dl.bintray.com/pledbrook/plugins'
         }
     }
 
     dependencies {
-        classpath "uk.co.cacoethes:lazybones-gradle:1.2.4"
+        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
     }
 }
 
@@ -14,7 +14,9 @@ plugins {
     id 'com.gradle.build-scan' version '1.4'
 }
 
-apply plugin: "uk.co.cacoethes.lazybones-templates"
+apply plugin: 'uk.co.cacoethes.lazybones-templates'
+apply plugin: 'groovy'
+apply plugin: 'idea'
 
 lazybones {
     repositoryName = 'yermilov/yermilov-lazybones'
@@ -24,6 +26,8 @@ lazybones {
 
     licenses = [ 'Apache-2.0' ]
     vcsUrl = 'https://github.com/yermilov/yermilov-lazybones'
+
+    template 'groovy-service' includes 'mongodb'
 }
 
 buildScan {

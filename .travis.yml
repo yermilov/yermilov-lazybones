@@ -2,10 +2,6 @@ sudo: required
 
 language: java
 
-branches:
-  only:
-  - master
-
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -19,7 +15,7 @@ before_install:
 - chmod +x gradlew
 
 install:
-- "./gradlew publishAllTemplates -Dscan"
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew publishAllTemplates -Dscan; else ./gradlew installAllTemplates -Dscan; fi
 
 env:
   global:
