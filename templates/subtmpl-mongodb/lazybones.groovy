@@ -19,16 +19,16 @@ def askParameter = { boolean isOptional, String propertyName, String defaultValu
 def askMandatory = askParameter.curry(false)
 
 
-def props = [:]
+def props = parentParams
 
 
-props.mongoDatabase = askMandatory 'mongoDatabase', parentParams.toString()
+props.mongoDatabase = askMandatory 'mongoDatabase', parentParams.githubOrganization
 props.mongoAuthDatabase = askMandatory 'mongoAuthDatabase', 'admin'
 props.mongoDockerContainerName = askMandatory 'mongoDockerContainerName', "${props.mongoDatabase}_mongo"
 props.mongoPort = askMandatory 'mongoPort', '27017'
 props.serviceUsername = askMandatory 'serviceUsername', "${transformText(parentParams.serviceName, from: NameType.HYPHENATED, to: NameType.PROPERTY)}Service"
-props.adminUsername = askMandatory 'adminUsername', "${transformText(parentParams.serviceName, from: NameType.HYPHENATED, to: NameType.PROPERTY)}Admin"
-props.rootUsername = askMandatory 'rootUsername', "${transformText(parentParams.serviceName, from: NameType.HYPHENATED, to: NameType.PROPERTY)}Root"
+props.adminUsername = askMandatory 'adminUsername', "${props.mongoDatabase}Admin"
+props.rootUsername = askMandatory 'rootUsername', "${props.mongoDatabase}Root"
 
 
 def templates = [
@@ -36,6 +36,17 @@ def templates = [
         'src/main/groovy/MongoConfiguration.groovy.gtpl'
 ]
 templates.each { processTemplates it, props }
+
+
+new File(templateDir, 'src/docs/mongodb-setup.adoc').renameTo(new File(projectDir, 'src/docs/mongodb-setup.adoc'))
+
+
+def configPackageDir = new File(projectDir, "src/main/groovy/${parentParams.rootPackage.replace('.', '/')}/config")
+configPackageDir.deleteDir()
+if (!configPackageDir.mkdirs()) {
+    error "Can't create directory ${configPackageDir.absolutePath}"
+}
+new File(templateDir, 'src/main/groovy/MongoConfiguration.groovy.gtpl').renameTo(new File(configPackageDir, 'MongoConfiguration.groovy'))
 
 
 def howtoStartDockerFile = new File(projectDir, 'src/docs/howto-start-docker.adoc')
@@ -56,14 +67,6 @@ MONGO_PASSWORD - password for authentication to mongodb
 """.trim()))
 
 howtoStartDockerFile.text = howtoStartDockerFile.text.replace('-v', "--link ${props.mongoDockerContainerName} -e MONGO_PASSWORD=?MONGODB_PASSWORD -v")
-
-
-def configPackageDir = new File(projectDir, "src/main/groovy/${props.rootPackage.replace('.', '/')}/config")
-configPackageDir.deleteDir()
-if (!configPackageDir.mkdirs()) {
-    error "Can't create directory ${configPackageDir.absolutePath}"
-}
-new File(projectDir, 'src/main/groovy/MongoConfiguration.groovy').renameTo(new File(configPackageDir, 'MongoConfiguration.groovy'))
 
 
 def buildGradleFile = new File(projectDir, 'build.gradle')
