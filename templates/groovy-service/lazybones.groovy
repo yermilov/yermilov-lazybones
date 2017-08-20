@@ -53,7 +53,9 @@ def environment = [
   'DOCKER_REPO',
   'TRAVIS_BUILD_NUMBER',
   'TAG',
-  'TAG_TO_DEPLOY'
+  'TAG_TO_DEPLOY',
+  'ENVIRONMENT_NAME',
+  'LOG_PATH'
 ]
 environment.each { props."$it" = '$' + it }
 
@@ -84,10 +86,10 @@ dockerEmail = askMandatory 'dockerEmail', props.githubEmail
 dockerUsername = askMandatory 'dockerUsername', props.githubOrganization
 dockerPassword = askSecured 'dockerPassword'
 
-deployTestUser = askMandatory 'deployTestUser', 'root'
-deployTestHost = askMandatory 'deployTestHost'
-deployProdUser = askMandatory 'deployProdUser', 'root'
-deployProdHost = askMandatory 'deployProdHost'
+props.deployTestUser = askMandatory 'deployTestUser', 'root'
+props.deployTestHost = askMandatory 'deployTestHost'
+props.deployProdUser = askMandatory 'deployProdUser', 'root'
+props.deployProdHost = askMandatory 'deployProdHost'
 
 props.rootPackage = askMandatory 'rootPackage', "com.github.${transformText(props.githubOrganization, from: NameType.HYPHENATED, to: NameType.PROPERTY)}.${transformText(props.githubRepository, from: NameType.HYPHENATED, to: NameType.PROPERTY)}"
 
@@ -139,20 +141,21 @@ dockerUsername = dockerUsername.substring(1, dockerUsername.length() - 1)
 dockerPassword = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DOCKER_PASSWORD=${dockerPassword}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 dockerPassword = dockerPassword.substring(1, dockerPassword.length() - 1)
 
-deployTestUser = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_TEST_USER=${deployTestUser}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
+deployTestUser = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_TEST_USER=${props.deployTestUser}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployTestUser = deployTestUser.substring(1, deployTestUser.length() - 1)
 
-deployTestHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_TEST_HOST=${deployTestHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
+deployTestHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_TEST_HOST=${props.deployTestHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployTestHost = deployTestHost.substring(1, deployTestHost.length() - 1)
 
-deployProdUser = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_USER=${deployProdUser}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
+deployProdUser = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_USER=${props.deployProdUser}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployProdUser = deployProdUser.substring(1, deployProdUser.length() - 1)
 
-deployProdHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_HOST=${deployProdHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
+deployProdHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_HOST=${props.deployProdHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployProdHost = deployProdHost.substring(1, deployProdHost.length() - 1)
 
 
 new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').text
+                                  .replace('__SSH_AGENT_S__', '$(ssh-agent -s)')
                                   .replace('- secure: $DOCKER_EMAIL', "- secure: ${dockerEmail}")
                                   .replace('- secure: $DOCKER_USERNAME', "- secure: ${dockerUsername}")
                                   .replace('- secure: $DOCKER_PASSWORD', "- secure: ${dockerPassword}")
@@ -160,6 +163,12 @@ new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').t
                                   .replace('- secure: $DEPLOY_TEST_HOST', "- secure: ${deployTestHost}")
                                   .replace('- secure: $DEPLOY_PROD_USER', "- secure: ${deployProdUser}")
                                   .replace('- secure: $DEPLOY_PROD_HOST', "- secure: ${deployProdHost}")
+
+new File(projectDir, 'src/main/resources/logback.groovy').text = new File(projectDir, 'src/main/resources/logback.groovy').text
+                                  .replace('__GET_LOG_PATH_FROM_ENV__', '''${System.getenv('LOG_PATH') ?: 'logs'}''')
+
+new File(projectDir, 'src/main/scripts/deploy.sh').text = new File(projectDir, 'src/main/scripts/deploy.sh').text
+                                  .replace('__DOLLAR_STAR__', '$*')
 
 runCommand([ 'git', 'add', '.' ])
 runCommand([ 'git', 'reset', 'lazybones.groovy' ])

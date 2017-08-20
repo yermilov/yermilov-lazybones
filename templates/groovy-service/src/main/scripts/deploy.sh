@@ -8,7 +8,7 @@
 ##############################################################################
 
 warn ( ) {
-    echo "$*"
+    echo "__DOLLAR_STAR__"
 }
 
 warn "Currently running docker images"

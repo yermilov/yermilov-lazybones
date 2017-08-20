@@ -26,7 +26,7 @@ after_success:
 
 before_script:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- eval "$(ssh-agent -s)"
+- eval "__SSH_AGENT_S__"
 - chmod 600 deployment_keys/deploy_test
 - ssh-add deployment_keys/deploy_test
 - chmod 600 deployment_keys/deploy_prod
