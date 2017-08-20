@@ -33,6 +33,8 @@ lazybones {
     licenses = [ 'Apache-2.0' ]
     vcsUrl = 'https://github.com/yermilov/yermilov-lazybones'
 
+    publish = true
+
     template 'groovy-service' includes 'mongodb'
 }
 
