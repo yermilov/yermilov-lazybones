@@ -1,0 +1,5 @@
+= Environments
+
+http://${deployTestHost}/ - test environment
+
+http://${deployProdHost}/ - production environment

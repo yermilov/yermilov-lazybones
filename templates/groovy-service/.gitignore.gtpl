@@ -11,3 +11,6 @@ out/
 # Gradle #
 build/
 .gradle/
+
+# Runtime #
+logs/

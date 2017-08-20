@@ -5,12 +5,20 @@ ${serviceDescription != null ? '\n' + serviceDescription + '\n': ''}
 
 image:https://travis-ci.org/${githubOrganization}/${githubRepository}.svg?branch=develop["Travis job", link="https://travis-ci.org/${githubOrganization}/${githubRepository}"]
 
+== Code coverage
+
+image:https://codecov.io/gh/${githubOrganization}/${githubRepository}/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/${githubOrganization}/${githubRepository}"]
+
 == Docker repository
 
 https://hub.docker.com/r/${dockerhubOrganization}/${dockerhubRepository}/
 
 == Documentation
 
-link:src/docs/howto-start-docker.adoc[HOWTO: start service as docker container, window="_blank"]
+== Documentation
 
-link:src/docs/howto-run-service.adoc[HOWTO: run service, window="_blank"]
+link:src/main/scripts/deploy[HOWTO: start service as docker container, window="_blank"]
+
+link:src/docs/configuration-parameters.adoc[Service configuration parameters]
+
+link:src/docs/environments.adoc[Environments]

@@ -8,5 +8,7 @@ RUN unzip /usr/src/${serviceName}/${serviceName}-*.zip -d /usr/app/ && ln -s /us
 
 WORKDIR /usr/app/${serviceName}
 
-ENTRYPOINT ["./bin/${serviceName}"]
+EXPOSE 8080
+ENV ENVIRONMENT_NAME test
+ENTRYPOINT [ "sh", "-c", "./bin/${serviceName} --spring.profiles.active=$ENVIRONMENT_NAME" ]
 CMD []

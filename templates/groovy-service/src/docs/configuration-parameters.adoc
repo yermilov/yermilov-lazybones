@@ -1,0 +1,5 @@
+= Configuration parameters
+
+ROOT_LOG_LEVEL - logging level for third-party libraries (default is INFO)
+
+SERVICE_LOG_LEVEL - logging level for service code (default is INFO)
