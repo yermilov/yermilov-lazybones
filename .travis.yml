@@ -15,7 +15,7 @@ before_install:
 - chmod +x gradlew
 
 install:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew publishAllTemplates --scan; else ./gradlew installAllTemplates --scan; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew publishAllTemplates -Dscan; else ./gradlew installAllTemplates -Dscan; fi
 
 env:
   global:
