@@ -65,3 +65,5 @@ At the end, finalize project creation with following:
 . Commit ___.lazybones/___ directory to store create configuration.
 
 . Push code to GitHub.
+
+. Encrypt deployment keys (using Linux box).
