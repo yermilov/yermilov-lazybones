@@ -15,13 +15,22 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
+- tar xvf deployment_keys.tar
 - chmod +x gradlew
 
 install:
-- ./gradlew build -Dscan
+- "./gradlew build jacocoTestReport --scan"
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
 
 before_script:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- eval "$(ssh-agent -s)"
+- chmod 600 deployment_keys/deploy_test
+- ssh-add deployment_keys/deploy_test
+- chmod 600 deployment_keys/deploy_prod
+- ssh-add deployment_keys/deploy_prod
 
 script:
 - export DOCKER_REPO=${dockerhubOrganization}/${dockerhubRepository}
@@ -29,9 +38,15 @@ script:
 - docker build -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG
 - docker push $DOCKER_REPO
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=develop ENVIRONMENT_NAME=test 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=latest ENVIRONMENT_NAME=prod 'bash -s' < src/main/scripts/deploy.sh; fi
 
 env:
   global:
-  - secure: $DOCKER_EMAIL
-  - secure: $DOCKER_USERNAME
-  - secure: $DOCKER_PASSWORD
+  - secure: $DOCKER_EMAIL # DOCKER_EMAIL
+  - secure: $DOCKER_USERNAME # DOCKER_USERNAME
+  - secure: $DOCKER_PASSWORD # DOCKER_PASSWORD
+  - secure: $DEPLOY_TEST_USER # DEPLOY_TEST_USER
+  - secure: $DEPLOY_TEST_HOST # DEPLOY_TEST_HOST
+  - secure: $DEPLOY_PROD_USER # DEPLOY_PROD_USER
+  - secure: $DEPLOY_PROD_HOST # DEPLOY_PROD_HOST

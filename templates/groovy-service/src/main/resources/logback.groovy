@@ -11,14 +11,14 @@ appender('STDOUT', ConsoleAppender) {
 }
 
 appender('FILE', RollingFileAppender) {
-    file = '/logs/${serviceName}.log'
+    file = '"${System.getenv('LOG_PATH') ?: 'logs'}'"/${serviceName}.log"
 
     encoder(PatternLayoutEncoder) {
         pattern = '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
     }
 
     rollingPolicy(TimeBasedRollingPolicy) {
-        FileNamePattern = "/logs/${serviceName}.%d{yyyy-MM-dd}.log"
+        FileNamePattern = '"${System.getenv('LOG_PATH') ?: 'logs'}'"/${serviceName}.%d{yyyy-MM-dd}.log"
     }
 }
 

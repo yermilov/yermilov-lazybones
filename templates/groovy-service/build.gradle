@@ -1,15 +1,24 @@
 plugins {
-    id 'com.gradle.build-scan' version '1.4'
-    id 'org.springframework.boot' version '1.4.3.RELEASE'
-}
+    id 'com.gradle.build-scan' version '1.8'
 
-apply plugin: 'groovy'
-apply plugin: 'idea'
+    id 'groovy'
+
+    id 'org.springframework.boot' version '1.5.4.RELEASE'
+
+    id 'jacoco'
+
+    id 'idea'
+}
 
 version = '0.1-SNAPSHOT'
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
+
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -26,6 +35,13 @@ dependencies {
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
     licenseAgree = 'yes'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 apply plugin: 'application'

@@ -29,8 +29,8 @@ You will get following project structure:
   |   |
   |   +- docs
   |   |   |
-  |   |   +- howto-run-service.adoc
-  |   |   +- howto-start-docker.adoc
+  |   |   +- configuration-parameters.adoc
+  |   |   +- environments.adoc
   |   |
   |   +- main
   |       |
@@ -46,8 +46,11 @@ You will get following project structure:
   |       |         |     ...
   |       |         +- Application.groovy
   |       +- resources
+  |       |    |
+  |       |    +- logback.groovy
+  |       +- scripts
   |            |
-  |            +- logback.groovy
+  |            +- deploy.sh
   +- .gitignore
   +- .travis.yml
   +- build.gradle
