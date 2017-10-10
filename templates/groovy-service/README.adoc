@@ -32,6 +32,14 @@ You will get following project structure:
   |   |   +- configuration-parameters.adoc
   |   |   +- environments.adoc
   |   |
+  |   +- integration-test
+  |   |   |
+  |   |   +- groovy
+  |   |   |    |
+  |   |   |
+  |   |   +- resources
+  |   |   |    |
+  |   |
   |   +- main
   |       |
   |       +- groovy
@@ -40,12 +48,14 @@ You will get following project structure:
   |       |         |
   |       |         +- controller
   |       |         |     |
-  |       |         |     ...
-  |       |         +- service
-  |       |         |     |
-  |       |         |     ...
+  |       |         |     VersionController.groovy
+  |       |         |
   |       |         +- Application.groovy
   |       +- resources
+  |       |    |
+  |       |    +- application-dev.properties
+  |       |    |
+  |       |    +- application.properties
   |       |    |
   |       |    +- logback.groovy
   |       +- scripts

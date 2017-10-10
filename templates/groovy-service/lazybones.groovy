@@ -153,6 +153,8 @@ deployProdUser = deployProdUser.substring(1, deployProdUser.length() - 1)
 deployProdHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_HOST=${props.deployProdHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployProdHost = deployProdHost.substring(1, deployProdHost.length() - 1)
 
+new File(projectDir, 'build.gradle').text = new File(projectDir, 'build.gradle').text
+                                  .replace('__VERSION__', '''"${new File('VERSION').text}${project.hasProperty('patchVersion') ? '.' + patchVersion : '-SNAPSHOT'}"''')
 
 new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').text
                                   .replace('__SSH_AGENT_S__', '$(ssh-agent -s)')
@@ -169,6 +171,23 @@ new File(projectDir, 'src/main/resources/logback.groovy').text = new File(projec
 
 new File(projectDir, 'src/main/scripts/deploy.sh').text = new File(projectDir, 'src/main/scripts/deploy.sh').text
                                   .replace('__DOLLAR_STAR__', '$*')
+
+new File(projectDir, 'VERSION').text = '0.1'
+
+new File(rootPackageDir, 'controller/VersionController.groovy').text = """package ${props.rootPackage}.controller
+
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+class VersionController {
+
+    @GetMapping(path = '/version')
+    @ResponseBody String version() {
+        VersionController.package.implementationVersion
+    }
+}"""
 
 runCommand([ 'git', 'add', '.' ])
 runCommand([ 'git', 'reset', 'lazybones.groovy' ])

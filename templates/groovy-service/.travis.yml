@@ -19,7 +19,7 @@ before_install:
 - chmod +x gradlew
 
 install:
-- "./gradlew build jacocoTestReport --scan"
+- "./gradlew build jacocoTestReport --scan -PpatchVersion=$TRAVIS_BUILD_NUMBER"
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
@@ -35,11 +35,13 @@ before_script:
 script:
 - export DOCKER_REPO=${dockerhubOrganization}/${dockerhubRepository}
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH | tr '/' '-' ; fi`
+- export TAG_VERSION=`cat VERSION`.$TRAVIS_BUILD_NUMBER
 - docker build -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG
+- docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG_VERSION
 - docker push $DOCKER_REPO
-- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=develop ENVIRONMENT_NAME=test 'bash -s' < src/main/scripts/deploy.sh; fi
-- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=latest ENVIRONMENT_NAME=prod 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=test 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=prod 'bash -s' < src/main/scripts/deploy.sh; fi
 
 env:
   global:
