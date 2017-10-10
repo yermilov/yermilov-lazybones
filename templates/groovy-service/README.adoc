@@ -32,6 +32,14 @@ You will get following project structure:
   |   |   +- configuration-parameters.adoc
   |   |   +- environments.adoc
   |   |
+  |   +- integration-test
+  |   |   |
+  |   |   +- groovy
+  |   |   |    |
+  |   |   |
+  |   |   +- resources
+  |   |   |    |
+  |   |
   |   +- main
   |       |
   |       +- groovy
@@ -40,12 +48,17 @@ You will get following project structure:
   |       |         |
   |       |         +- controller
   |       |         |     |
-  |       |         |     ...
+  |       |         |     VersionController.groovy
+  |       |         |
   |       |         +- service
   |       |         |     |
-  |       |         |     ...
+  |       |         |
   |       |         +- Application.groovy
   |       +- resources
+  |       |    |
+  |       |    +- application-dev.properties
+  |       |    |
+  |       |    +- application.properties
   |       |    |
   |       |    +- logback.groovy
   |       +- scripts
@@ -65,3 +78,5 @@ At the end, finalize project creation with following:
 . Commit ___.lazybones/___ directory to store create configuration.
 
 . Push code to GitHub.
+
+. Encrypt deployment keys (using Linux box).

@@ -17,7 +17,7 @@ https://hub.docker.com/r/${dockerhubOrganization}/${dockerhubRepository}/
 
 == Documentation
 
-link:src/main/scripts/deploy[HOWTO: start service as docker container, window="_blank"]
+link:src/main/scripts/deploy.sh[HOWTO: start service as docker container, window="_blank"]
 
 link:src/docs/configuration-parameters.adoc[Service configuration parameters]
 
