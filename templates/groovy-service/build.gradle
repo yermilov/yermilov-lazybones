@@ -100,7 +100,7 @@ check.dependsOn integrationTest
 integrationTest.mustRunAfter test
 
 tasks.withType(Test) {
-    reports.html.destination = file("${reporting.baseDir}/${name}")
+    reports.html.destination = file(__TEST_REPORTING_DIR__)
 }
 
 apply plugin: 'application'

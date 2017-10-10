@@ -50,6 +50,9 @@ You will get following project structure:
   |       |         |     |
   |       |         |     VersionController.groovy
   |       |         |
+  |       |         +- service
+  |       |         |     |
+  |       |         |
   |       |         +- Application.groovy
   |       +- resources
   |       |    |

@@ -53,6 +53,7 @@ def environment = [
   'DOCKER_REPO',
   'TRAVIS_BUILD_NUMBER',
   'TAG',
+  'TAG_VERSION',
   'TAG_TO_DEPLOY',
   'ENVIRONMENT_NAME',
   'LOG_PATH'
@@ -105,6 +106,7 @@ def templates = [
         'build.gradle',
         'Dockerfile',
         'src/main/groovy/Application.groovy.gtpl',
+        'src/main/resources/application-dev.properties',
         'src/main/resources/logback.groovy',
         'src/main/scripts/deploy.sh',
         'src/docs/configuration-parameters.adoc',
@@ -155,6 +157,7 @@ deployProdHost = deployProdHost.substring(1, deployProdHost.length() - 1)
 
 new File(projectDir, 'build.gradle').text = new File(projectDir, 'build.gradle').text
                                   .replace('__VERSION__', '''"${new File('VERSION').text}${project.hasProperty('patchVersion') ? '.' + patchVersion : '-SNAPSHOT'}"''')
+                                  .replace('__TEST_REPORTING_DIR__', '''"${reporting.baseDir}/${name}"''')
 
 new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').text
                                   .replace('__SSH_AGENT_S__', '$(ssh-agent -s)')

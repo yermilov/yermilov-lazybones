@@ -24,7 +24,7 @@ lazybones config add bintrayRepositories yermilov/yermilov-lazybones
 ----
 ./gradlew installAllTemplates
 
-lazybones create service-name SNAPSHOT_VERSION project-name .
+lazybones create service-name SNAPSHOT_VERSION project-name|.
 ----
 
 == List of templates
