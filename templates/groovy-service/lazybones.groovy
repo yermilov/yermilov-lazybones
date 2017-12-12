@@ -42,7 +42,6 @@ def props = [:]
 
 def environment = [
   'HOME',
-  'DOCKER_EMAIL',
   'DOCKER_USERNAME',
   'DOCKER_PASSWORD',
   'DEPLOY_TEST_USER',
@@ -83,7 +82,6 @@ props.dockerhubOrganization = askMandatory 'dockerhubOrganization', props.github
 props.dockerhubRepository = askMandatory 'dockerhubRepository', props.githubRepository
 
 props.rubyHome = askMandatory 'rubyHome', System.getenv('PATH').split(';').find({ it.toLowerCase().contains('ruby') })
-dockerEmail = askMandatory 'dockerEmail', props.githubEmail
 dockerUsername = askMandatory 'dockerUsername', props.githubOrganization
 dockerPassword = askSecured 'dockerPassword'
 
@@ -134,8 +132,6 @@ runCommand([ 'git', 'init' ])
 runCommand([ 'git', 'config', 'user.name', props.githubUsername ])
 runCommand([ 'git', 'config', 'user.email', props.githubEmail ])
 
-dockerEmail = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DOCKER_EMAIL=${dockerEmail}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
-dockerEmail = dockerEmail.substring(1, dockerEmail.length() - 1)
 
 dockerUsername = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DOCKER_USERNAME=${dockerUsername}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 dockerUsername = dockerUsername.substring(1, dockerUsername.length() - 1)
@@ -158,10 +154,10 @@ deployProdHost = deployProdHost.substring(1, deployProdHost.length() - 1)
 new File(projectDir, 'build.gradle').text = new File(projectDir, 'build.gradle').text
                                   .replace('__VERSION__', '''"${new File('VERSION').text}${project.hasProperty('patchVersion') ? '.' + patchVersion : '-SNAPSHOT'}"''')
                                   .replace('__TEST_REPORTING_DIR__', '''"${reporting.baseDir}/${name}"''')
+                                  .replace('__BUILD_DIR__', '''$buildDir''')
 
 new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').text
                                   .replace('__SSH_AGENT_S__', '$(ssh-agent -s)')
-                                  .replace('- secure: $DOCKER_EMAIL', "- secure: ${dockerEmail}")
                                   .replace('- secure: $DOCKER_USERNAME', "- secure: ${dockerUsername}")
                                   .replace('- secure: $DOCKER_PASSWORD', "- secure: ${dockerPassword}")
                                   .replace('- secure: $DEPLOY_TEST_USER', "- secure: ${deployTestUser}")

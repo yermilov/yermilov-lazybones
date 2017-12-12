@@ -25,7 +25,7 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 
 before_script:
-- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - eval "__SSH_AGENT_S__"
 - chmod 600 deployment_keys/deploy_test
 - ssh-add deployment_keys/deploy_test
@@ -45,7 +45,6 @@ script:
 
 env:
   global:
-  - secure: $DOCKER_EMAIL # DOCKER_EMAIL
   - secure: $DOCKER_USERNAME # DOCKER_USERNAME
   - secure: $DOCKER_PASSWORD # DOCKER_PASSWORD
   - secure: $DEPLOY_TEST_USER # DEPLOY_TEST_USER

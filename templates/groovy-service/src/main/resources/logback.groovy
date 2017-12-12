@@ -22,8 +22,8 @@ appender('FILE', RollingFileAppender) {
     }
 }
 
-String SERVICE_LOG_LEVEL = System.getenv('SERVICE_LOG_LEVEL') ?: 'INFO'
-String ROOT_LOG_LEVEL = System.getenv('ROOT_LOG_LEVEL') ?: 'INFO'
+String SERVICE_LOG_LEVEL = System.getenv('SERVICE_LOG_LEVEL') ?: (System.getenv('ENVIRONMENT_NAME') == 'prod' ? 'INFO' : 'DEBUG')
+String ROOT_LOG_LEVEL = System.getenv('ROOT_LOG_LEVEL') ?: 'WARN'
 
 root(Level.toLevel(ROOT_LOG_LEVEL), ['STDOUT', 'FILE' ])
 logger('${rootPackage}', Level.toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE' ], false)
