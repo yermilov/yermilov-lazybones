@@ -22,8 +22,25 @@ appender('FILE', RollingFileAppender) {
     }
 }
 
+appender('LOGZIO', LogzioLogbackAppender) {
+    token = System.getenv('LOGZIO_TOKEN') ?: new File('src/main/resources/logzio-dev.properties').text
+    logzioUrl = 'https://listener.logz.io:8071'
+
+    additionalFields="service=${serviceName};env=__GET_ENV_NAME__"
+}
+
+def shutdownHook() {
+    def shutdownHook = new DelayingShutdownHook()
+    shutdownHook.setContext(context)
+
+    Thread hookThread = new Thread(shutdownHook, "Logback shutdown hook [__CONTEXT_NAME__]")
+    context.putObject('SHUTDOWN_HOOK', hookThread)
+    Runtime.getRuntime().addShutdownHook(hookThread)
+}
+shutdownHook()
+
 String SERVICE_LOG_LEVEL = System.getenv('SERVICE_LOG_LEVEL') ?: (System.getenv('ENVIRONMENT_NAME') == 'prod' ? 'INFO' : 'DEBUG')
 String ROOT_LOG_LEVEL = System.getenv('ROOT_LOG_LEVEL') ?: 'WARN'
 
-root(Level.toLevel(ROOT_LOG_LEVEL), ['STDOUT', 'FILE' ])
-logger('${rootPackage}', Level.toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE' ], false)
+root(Level.toLevel(ROOT_LOG_LEVEL), ['STDOUT', 'FILE', 'LOGZIO' ])
+logger('${rootPackage}', Level.toLevel(SERVICE_LOG_LEVEL), [ 'STDOUT', 'FILE', 'LOGZIO' ], false)

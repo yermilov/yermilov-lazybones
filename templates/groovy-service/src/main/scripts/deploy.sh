@@ -21,7 +21,7 @@ warn "Pulling latest docker image..."
 docker pull ${dockerhubOrganization}/${dockerhubRepository}:$TAG_TO_DEPLOY
 
 warn "Starting docker image..."
-docker run -dit --name ${dockerContainerName} -e LOG_PATH=/mnt/logs -v /mnt/logs:/mnt/logs ${dockerhubOrganization}/${dockerhubRepository}:$TAG_TO_DEPLOY
+docker run -dit --name ${dockerContainerName} -e LOG_PATH=/mnt/logs -v /mnt/logs:/mnt/logs -e LOGZIO_TOKEN=$LOGZIO_TOKEN ${dockerhubOrganization}/${dockerhubRepository}:$TAG_TO_DEPLOY
 
 warn "Currently running docker images"
 docker ps -a

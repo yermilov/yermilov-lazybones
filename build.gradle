@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '1.11'
+    id 'com.gradle.build-scan' version '1.12.1'
 
     id 'groovy'
 
@@ -21,7 +21,7 @@ plugins {
 apply plugin: 'uk.co.cacoethes.lazybones-templates'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.6'
 }
 
 lazybones {
