@@ -55,7 +55,8 @@ def environment = [
   'TAG_VERSION',
   'TAG_TO_DEPLOY',
   'ENVIRONMENT_NAME',
-  'LOG_PATH'
+  'LOG_PATH',
+  'LOGZIO_TOKEN'
 ]
 environment.each { props."$it" = '$' + it }
 
@@ -95,6 +96,8 @@ props.rootPackage = askMandatory 'rootPackage', "com.github.${transformText(prop
 props.dockerContainerName = askMandatory 'dockerContainerName', props.serviceName
 
 props.externalPort = askMandatory 'externalPort', 'no'
+
+logzioToken = askSecured 'logzioToken'
 
 
 def templates = [
@@ -151,6 +154,9 @@ deployProdUser = deployProdUser.substring(1, deployProdUser.length() - 1)
 deployProdHost = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "DEPLOY_PROD_HOST=${props.deployProdHost}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
 deployProdHost = deployProdHost.substring(1, deployProdHost.length() - 1)
 
+logzioTokenEncrypted = runCommand([ 'ruby', "${props.rubyHome}/travis", 'encrypt', "LOGZIO_TOKEN=${logzioToken}", "--repo=${props.githubOrganization}/${props.githubRepository}" ])
+logzioTokenEncrypted = logzioTokenEncrypted.substring(1, logzioTokenEncrypted.length() - 1)
+
 new File(projectDir, 'build.gradle').text = new File(projectDir, 'build.gradle').text
                                   .replace('__VERSION__', '''"${new File('VERSION').text}${project.hasProperty('patchVersion') ? '.' + patchVersion : '-SNAPSHOT'}"''')
                                   .replace('__TEST_REPORTING_DIR__', '''"${reporting.baseDir}/${name}"''')
@@ -164,14 +170,19 @@ new File(projectDir, '.travis.yml').text = new File(projectDir, '.travis.yml').t
                                   .replace('- secure: $DEPLOY_TEST_HOST', "- secure: ${deployTestHost}")
                                   .replace('- secure: $DEPLOY_PROD_USER', "- secure: ${deployProdUser}")
                                   .replace('- secure: $DEPLOY_PROD_HOST', "- secure: ${deployProdHost}")
+                                  .replace('- secure: $LOGZIO_TOKEN', "- secure: ${logzioTokenEncrypted}")
 
 new File(projectDir, 'src/main/resources/logback.groovy').text = new File(projectDir, 'src/main/resources/logback.groovy').text
                                   .replace('__GET_LOG_PATH_FROM_ENV__', '''${System.getenv('LOG_PATH') ?: 'logs'}''')
+                                  .replace('__GET_ENV_NAME__', '''${System.getenv('ENVIRONMENT_NAME') ?: 'dev'}''')
+                                  .replace('__CONTEXT_NAME__', '''${context.name}''')
 
 new File(projectDir, 'src/main/scripts/deploy.sh').text = new File(projectDir, 'src/main/scripts/deploy.sh').text
                                   .replace('__DOLLAR_STAR__', '$*')
 
 new File(projectDir, 'VERSION').text = '0.1'
+
+new File(projectDir, 'src/main/resources/logzio-dev.properties').text = logzioToken
 
 new File(rootPackageDir, 'controller/VersionController.groovy').text = """package ${props.rootPackage}.controller
 

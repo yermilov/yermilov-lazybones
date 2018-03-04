@@ -40,8 +40,8 @@ script:
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG_VERSION
 - docker push $DOCKER_REPO
-- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=test 'bash -s' < src/main/scripts/deploy.sh; fi
-- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=prod 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=test LOGZIO_TOKEN=$LOGZIO_TOKEN 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=prod LOGZIO_TOKEN=$LOGZIO_TOKEN 'bash -s' < src/main/scripts/deploy.sh; fi
 
 env:
   global:
@@ -51,3 +51,4 @@ env:
   - secure: $DEPLOY_TEST_HOST # DEPLOY_TEST_HOST
   - secure: $DEPLOY_PROD_USER # DEPLOY_PROD_USER
   - secure: $DEPLOY_PROD_HOST # DEPLOY_PROD_HOST
+  - secure: $LOGZIO_TOKEN # LOGZIO_TOKEN
